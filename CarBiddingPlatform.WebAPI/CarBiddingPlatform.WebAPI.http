@@ -1,0 +1,6 @@
+@CarBiddingPlatform.WebAPI_HostAddress = http://localhost:5044
+
+GET {{CarBiddingPlatform.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
