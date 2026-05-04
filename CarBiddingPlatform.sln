@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Domain", "CarBiddingPlatform.Domain\CarBiddingPlatform.Domain.csproj", "{FB862226-4667-4605-9D31-DAAC609715C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Domain", "src\CarBiddingPlatform.Domain\CarBiddingPlatform.Domain.csproj", "{9F9B6B9C-8D38-4448-AC49-EAAE12057BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Application", "CarBiddingPlatform.Application\CarBiddingPlatform.Application.csproj", "{7FDB77FD-71C4-48A4-9053-AD06C476EE8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Infrastructure", "src\CarBiddingPlatform.Infrastructure\CarBiddingPlatform.Infrastructure.csproj", "{9EF1F57F-0FC1-4F27-AE55-A22A4A0E86A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Infrastructure", "CarBiddingPlatform.Infrastructure\CarBiddingPlatform.Infrastructure.csproj", "{695F07AE-460F-4536-A848-2EE4D2771CC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarBiddingPlatform.Application", "src\CarBiddingPlatform.Application\CarBiddingPlatform.Application.csproj", "{2D0F5CE8-FD17-43A5-A261-D75287532F14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,17 +12,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FB862226-4667-4605-9D31-DAAC609715C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB862226-4667-4605-9D31-DAAC609715C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB862226-4667-4605-9D31-DAAC609715C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB862226-4667-4605-9D31-DAAC609715C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FDB77FD-71C4-48A4-9053-AD06C476EE8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FDB77FD-71C4-48A4-9053-AD06C476EE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7FDB77FD-71C4-48A4-9053-AD06C476EE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FDB77FD-71C4-48A4-9053-AD06C476EE8A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{695F07AE-460F-4536-A848-2EE4D2771CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{695F07AE-460F-4536-A848-2EE4D2771CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{695F07AE-460F-4536-A848-2EE4D2771CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{695F07AE-460F-4536-A848-2EE4D2771CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9B6B9C-8D38-4448-AC49-EAAE12057BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9B6B9C-8D38-4448-AC49-EAAE12057BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9B6B9C-8D38-4448-AC49-EAAE12057BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9B6B9C-8D38-4448-AC49-EAAE12057BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF1F57F-0FC1-4F27-AE55-A22A4A0E86A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF1F57F-0FC1-4F27-AE55-A22A4A0E86A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF1F57F-0FC1-4F27-AE55-A22A4A0E86A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF1F57F-0FC1-4F27-AE55-A22A4A0E86A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D0F5CE8-FD17-43A5-A261-D75287532F14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0F5CE8-FD17-43A5-A261-D75287532F14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0F5CE8-FD17-43A5-A261-D75287532F14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0F5CE8-FD17-43A5-A261-D75287532F14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
