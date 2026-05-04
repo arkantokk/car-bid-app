@@ -9,6 +9,8 @@ public class Bid
 
     public Bid(string bidOwner, decimal amount)
     {
+        if (string.IsNullOrEmpty(bidOwner)) throw new Exception("Owner shouldn't be empty");
+        if (amount == null) throw new Exception("amount cant be empty");
         Id = Guid.NewGuid();
         BidOwner = bidOwner;
         Amount = amount;

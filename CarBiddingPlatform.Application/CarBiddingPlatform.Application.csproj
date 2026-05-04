@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CarBiddingPlatform.Domain\CarBiddingPlatform.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

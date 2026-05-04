@@ -20,7 +20,8 @@ public class Auction
 
     public Auction(Guid carId, decimal startingPrice, DateTime endTime)
     {
-        if (DateTime.UtcNow > EndTime) throw new Exception("Incorrect date");
+        if (DateTime.UtcNow > endTime) throw new Exception("Incorrect date");
+        if (startingPrice < 0) throw new Exception("Starting price cant be less than 0");
         Id = Guid.NewGuid();
         CarId = carId;
         StartingPrice = startingPrice;
