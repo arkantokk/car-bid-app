@@ -12,7 +12,7 @@ public class PlaceBidCommandHandler
         _repository = repository;
     }
 
-    public async Task<Auction> HandleAsync(PlaceBidCommand bidCommand)
+    public async Task<bool> HandleAsync(PlaceBidCommand bidCommand)
     {
         var auction = await _repository.GetAuctionByIdAsync(bidCommand.AuctionId);
         if (auction == null)

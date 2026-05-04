@@ -4,6 +4,6 @@ namespace CarBiddingPlatform.Application.Interfaces;
 
 public interface IAuctionRepository
 {
-    Task<Auction> GetAuctionByIdAsync(Guid id);
-    Task<Auction> SaveAuctionAsync(Auction auction);
+    Task<Auction?> GetAuctionByIdAsync(Guid id);
+    Task<bool> SaveAuctionAsync(Auction auction);
 }

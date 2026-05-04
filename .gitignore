@@ -1,6 +1,47 @@
+# ==========================================
+# JetBrains Rider & IDEs
+# ==========================================
+.idea/
+*.sln.iml
+*.suo
+*.user
+*.userprefs
+.vs/
+
+# ==========================================
+# .NET Core / Build Folders
+# ==========================================
 bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+TestResults/
+
+# ==========================================
+# AppSettings & Secrets (CRITICAL)
+# ==========================================
+# We keep the base appsettings.json, but ignore environment-specific ones
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# Ignore User Secrets and Environment Variables
+secrets.json
+*.env
 .env
+.env.*
+
+# ==========================================
+# OS Generated Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========================================
+# Logs
+# ==========================================
+*.log

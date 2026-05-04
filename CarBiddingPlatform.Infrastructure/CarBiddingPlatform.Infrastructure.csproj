@@ -10,4 +10,8 @@
       <ProjectReference Include="..\CarBiddingPlatform.Application\CarBiddingPlatform.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.26" />
+    </ItemGroup>
+
 </Project>
