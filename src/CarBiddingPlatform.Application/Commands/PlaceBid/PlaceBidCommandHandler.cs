@@ -1,7 +1,7 @@
 ﻿using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Domain.Entities;
 
-namespace CarBiddingPlatform.Application.commands;
+namespace CarBiddingPlatform.Application.Commands.PlaceBid;
 
 public class PlaceBidCommandHandler
 {

@@ -10,4 +10,8 @@
       <ProjectReference Include="..\CarBiddingPlatform.Domain\CarBiddingPlatform.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Queries\" />
+    </ItemGroup>
+
 </Project>

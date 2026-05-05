@@ -1,4 +1,4 @@
-﻿namespace CarBiddingPlatform.Application;
+﻿namespace CarBiddingPlatform.Application.Commands.PlaceBid;
 
 public record PlaceBidCommand(
     string BidOwner,

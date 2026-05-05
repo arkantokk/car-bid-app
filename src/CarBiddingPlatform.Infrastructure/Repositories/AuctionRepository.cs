@@ -20,6 +20,12 @@ public class AuctionRepository : IAuctionRepository
         return auction;
     }
 
+    public async Task<bool> CreateAuctionAsync(Auction auction)
+    {
+        await _context.Auctions.AddAsync(auction);
+        await _context.SaveChangesAsync();
+        return true;
+    }
     public async Task<bool> SaveAuctionAsync(Auction auction){
         await _context.SaveChangesAsync();
         return true;

@@ -1,5 +1,5 @@
 ﻿using CarBiddingPlatform.Application;
-using CarBiddingPlatform.Application.commands;
+using CarBiddingPlatform.Application.Commands.PlaceBid;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;

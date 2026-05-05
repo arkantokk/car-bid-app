@@ -1,4 +1,4 @@
-using CarBiddingPlatform.Application.commands;
+using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
 using CarBiddingPlatform.Infrastructure.Repositories;
