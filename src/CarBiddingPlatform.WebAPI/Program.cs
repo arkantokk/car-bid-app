@@ -22,6 +22,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<BiddingDbContext>();
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+        builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<PlaceBidCommandHandler>();
         var app = builder.Build();
 
