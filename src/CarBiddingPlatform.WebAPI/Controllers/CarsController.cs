@@ -1,4 +1,5 @@
 ﻿using CarBiddingPlatform.Application.Commands.CreateCar;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;
@@ -6,11 +7,11 @@ namespace CarBiddingPlatform.WebAPI.Controllers;
 [Route("/api/[controller]")]
 public class CarsController : ControllerBase
 {
-    private readonly CreateCarCommandHandler _createCarCommandHandler;
+    private readonly IMediator _mediator;
 
-    public CarsController(CreateCarCommandHandler createCarCommandHandler)
+    public CarsController(IMediator mediator)
     {
-        _createCarCommandHandler = createCarCommandHandler;
+        _mediator = mediator;
     }
 
     [HttpPost]
@@ -18,7 +19,7 @@ public class CarsController : ControllerBase
     {
         try
         {
-            var car = await _createCarCommandHandler.HandleAsync(command);
+            var car = await _mediator.Send(command);
             return Ok(car);
         }
         catch

@@ -1,5 +1,6 @@
 ﻿using CarBiddingPlatform.Application;
 using CarBiddingPlatform.Application.Commands.PlaceBid;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;
@@ -7,11 +8,11 @@ namespace CarBiddingPlatform.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class BidsController : ControllerBase
 {
-    private readonly PlaceBidCommandHandler _commandHandler;
+    private readonly IMediator _mediator;
 
-    public BidsController(PlaceBidCommandHandler commandHandler)
+    public BidsController(IMediator mediator)
     {
-        _commandHandler = commandHandler;
+        _mediator = mediator;
     }
 
     [HttpPost]
@@ -19,7 +20,7 @@ public class BidsController : ControllerBase
     {
         try
         {
-            var bid = await _commandHandler.HandleAsync(command);
+            var bid = await _mediator.Send(command);
             return Ok(bid);
         }
         catch

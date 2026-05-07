@@ -1,4 +1,6 @@
-﻿namespace CarBiddingPlatform.Application.Commands.CreateCar;
+﻿using MediatR;
+
+namespace CarBiddingPlatform.Application.Commands.CreateCar;
 
 public record CreateCarCommand(
     string Brand,
@@ -6,4 +8,4 @@ public record CreateCarCommand(
     int Year,
     decimal Price,
     string UserId
-    );
+    ) : IRequest<Guid>;

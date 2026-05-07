@@ -1,9 +1,10 @@
 ﻿using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Domain.Entities;
+using MediatR;
 
 namespace CarBiddingPlatform.Application.Commands.PlaceBid;
 
-public class PlaceBidCommandHandler
+public class PlaceBidCommandHandler : IRequestHandler<PlaceBidCommand, bool>
 {
     private readonly IAuctionRepository _repository;
 
@@ -12,7 +13,7 @@ public class PlaceBidCommandHandler
         _repository = repository;
     }
 
-    public async Task<bool> HandleAsync(PlaceBidCommand bidCommand)
+    public async Task<bool> Handle(PlaceBidCommand bidCommand, CancellationToken cancellationToken)
     {
         var auction = await _repository.GetAuctionByIdAsync(bidCommand.AuctionId);
         if (auction == null)
