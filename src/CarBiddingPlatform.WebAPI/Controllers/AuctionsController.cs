@@ -17,14 +17,7 @@ public class AuctionsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAuctionAsync([FromBody] CreateAuctionCommand command)
     {
-        try
-        {
-            var auction = await _mediator.Send(command); 
-            return Ok(auction);
-        }
-        catch
-        {
-            return BadRequest();
-        }
+            var auctionId = await _mediator.Send(command); 
+            return Created(string.Empty, new {AuctionId = auctionId});
     }
 }

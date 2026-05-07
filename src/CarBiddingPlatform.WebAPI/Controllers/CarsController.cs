@@ -17,14 +17,7 @@ public class CarsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCarsAsync([FromBody] CreateCarCommand command)
     {
-        try
-        {
-            var car = await _mediator.Send(command);
-            return Ok(car);
-        }
-        catch
-        {
-            return BadRequest();
-        }
+            var carId = await _mediator.Send(command);
+            return Created(string.Empty, new { CarId = carId });
     }
 }

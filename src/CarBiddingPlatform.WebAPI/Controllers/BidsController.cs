@@ -18,16 +18,7 @@ public class BidsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PlaceBid([FromBody] PlaceBidCommand command)
     {
-        try
-        {
             var bid = await _mediator.Send(command);
             return Ok(bid);
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-       
     }
 }
