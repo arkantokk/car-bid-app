@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarBiddingPlatform.Infrastructure.Migrations
 {
-    [DbContext(typeof(BiddingDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260504110932_InitialCreate")]
     partial class InitialCreate
     {

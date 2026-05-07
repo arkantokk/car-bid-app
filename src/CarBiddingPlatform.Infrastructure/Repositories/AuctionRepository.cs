@@ -7,9 +7,9 @@ namespace CarBiddingPlatform.Infrastructure.Repositories;
 
 public class AuctionRepository : IAuctionRepository
 {
-    private readonly BiddingDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public AuctionRepository(BiddingDbContext context)
+    public AuctionRepository(ApplicationDbContext context)
     {
         _context = context;
     }

@@ -1,11 +1,13 @@
 ﻿using CarBiddingPlatform.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarBiddingPlatform.Infrastructure.Data;
 
-public class BiddingDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public BiddingDbContext(DbContextOptions<BiddingDbContext> dbContext) : base(dbContext)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContext) : base(dbContext)
     {
         
     }
