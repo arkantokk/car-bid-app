@@ -21,10 +21,8 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<BiddingDbContext>();
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
         builder.Services.AddScoped<ICarRepository, CarRepository>();
-        builder.Services.AddScoped<PlaceBidCommandHandler>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
         var app = builder.Build();
 

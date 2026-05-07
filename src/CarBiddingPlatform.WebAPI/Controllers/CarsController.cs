@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;
 [ApiController]
-[Route("/api/[controller]")]
+[Route("api/[controller]")]
 public class CarsController : ControllerBase
 {
     private readonly IMediator _mediator;
