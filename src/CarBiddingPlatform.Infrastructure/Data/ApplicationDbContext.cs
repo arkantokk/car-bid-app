@@ -22,7 +22,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
         modelBuilder.Entity<Bid>().Property(b => b.Amount).HasColumnType("decimal(18,2)");
         modelBuilder.Entity<Auction>().Property(a => a.StartingPrice).HasColumnType("decimal(18,2)");
         modelBuilder.Entity<Auction>().Property(a => a.CurrentHighestBid).HasColumnType("decimal(18,2)");
-
+        modelBuilder.Entity<Auction>().Property(a => a.Version).IsRowVersion(); // delegating versioning to EF 
         base.OnModelCreating(modelBuilder);
     }
 }
