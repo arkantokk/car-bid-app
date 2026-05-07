@@ -3,6 +3,7 @@ using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
 using CarBiddingPlatform.Infrastructure.Repositories;
+using CarBiddingPlatform.WebAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarBiddingPlatform.WebAPI;
@@ -24,8 +25,12 @@ public class Program
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
+        builder.Services.AddExceptionHandler<GlobalErrorHandler>();
+        builder.Services.AddProblemDetails(); 
+        
         var app = builder.Build();
-
+        
+        app.UseExceptionHandler();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -39,7 +44,7 @@ public class Program
 
 
         app.MapControllers();
-
+        
         app.Run();
     }
 }
