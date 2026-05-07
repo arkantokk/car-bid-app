@@ -1,3 +1,4 @@
+using CarBiddingPlatform.Application.Commands.CreateAuction;
 using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
@@ -24,6 +25,7 @@ public class Program
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<PlaceBidCommandHandler>();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
