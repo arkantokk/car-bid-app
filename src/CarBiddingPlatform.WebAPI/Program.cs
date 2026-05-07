@@ -1,7 +1,9 @@
-using CarBiddingPlatform.Application.commands;
+using CarBiddingPlatform.Application.Commands.CreateAuction;
+using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
 using CarBiddingPlatform.Infrastructure.Repositories;
+using CarBiddingPlatform.WebAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarBiddingPlatform.WebAPI;
@@ -20,11 +22,15 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<BiddingDbContext>();
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
-        builder.Services.AddScoped<PlaceBidCommandHandler>();
+        builder.Services.AddScoped<ICarRepository, CarRepository>();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
+        builder.Services.AddExceptionHandler<GlobalErrorHandler>();
+        builder.Services.AddProblemDetails(); 
+        
         var app = builder.Build();
-
+        
+        app.UseExceptionHandler();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -38,7 +44,7 @@ public class Program
 
 
         app.MapControllers();
-
+        
         app.Run();
     }
 }

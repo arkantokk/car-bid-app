@@ -10,4 +10,12 @@
       <ProjectReference Include="..\CarBiddingPlatform.Domain\CarBiddingPlatform.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Queries\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.1.0" />
+    </ItemGroup>
+
 </Project>
