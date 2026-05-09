@@ -4,6 +4,7 @@ public class Auction
 {
     public Guid Id { get; private set; }
     public Guid CarId { get; private set; }
+    public string SellerId { get; private set; }
     public decimal StartingPrice { get; private set; }
     public decimal CurrentHighestBid { get; private set; }
     public byte[] Version { get; private set; }
@@ -15,16 +16,18 @@ public class Auction
     {
         if (DateTime.UtcNow > EndTime) throw new Exception("Auction has ended.");
         if (newBid.Amount <= CurrentHighestBid) throw new Exception("Bid must be higher than current highest bid.");
+        if (newBid.BidOwner == SellerId) throw new Exception("You cannot bid on your own auction.");
         _bids.Add(newBid);
         CurrentHighestBid = newBid.Amount;
     }
 
-    public Auction(Guid carId, decimal startingPrice, DateTime endTime)
+    public Auction(Guid carId, decimal startingPrice, DateTime endTime, string sellerId)
     {
         if (DateTime.UtcNow > endTime) throw new Exception("Incorrect date");
         if (startingPrice < 0) throw new Exception("Starting price cant be less than 0");
         Id = Guid.NewGuid();
         CarId = carId;
+        SellerId = sellerId;
         StartingPrice = startingPrice;
         CurrentHighestBid = startingPrice;
         EndTime = endTime;

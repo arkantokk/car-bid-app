@@ -4,6 +4,7 @@ using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
 using CarBiddingPlatform.Infrastructure.Repositories;
+using CarBiddingPlatform.Infrastructure.Services;
 using CarBiddingPlatform.WebAPI.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,8 @@ public class Program
             .AddDefaultTokenProviders();
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
         builder.Services.AddScoped<ICarRepository, CarRepository>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
         builder.Services.AddExceptionHandler<GlobalErrorHandler>();
         builder.Services.AddProblemDetails(); 
