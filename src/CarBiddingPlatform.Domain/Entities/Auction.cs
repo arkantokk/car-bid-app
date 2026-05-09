@@ -6,6 +6,7 @@ public class Auction
     public Guid CarId { get; private set; }
     public decimal StartingPrice { get; private set; }
     public decimal CurrentHighestBid { get; private set; }
+    public byte[] Version { get; private set; }
     private readonly List<Bid> _bids = [];
     public IReadOnlyCollection<Bid> Bids => _bids.AsReadOnly();
     public DateTime EndTime { get; private set; }

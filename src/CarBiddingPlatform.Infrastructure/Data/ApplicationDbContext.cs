@@ -1,11 +1,13 @@
 ﻿using CarBiddingPlatform.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarBiddingPlatform.Infrastructure.Data;
 
-public class BiddingDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public BiddingDbContext(DbContextOptions<BiddingDbContext> dbContext) : base(dbContext)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContext) : base(dbContext)
     {
         
     }
@@ -20,7 +22,7 @@ public class BiddingDbContext : DbContext
         modelBuilder.Entity<Bid>().Property(b => b.Amount).HasColumnType("decimal(18,2)");
         modelBuilder.Entity<Auction>().Property(a => a.StartingPrice).HasColumnType("decimal(18,2)");
         modelBuilder.Entity<Auction>().Property(a => a.CurrentHighestBid).HasColumnType("decimal(18,2)");
-
+        modelBuilder.Entity<Auction>().Property(a => a.Version).IsRowVersion(); // delegating versioning to EF 
         base.OnModelCreating(modelBuilder);
     }
 }
