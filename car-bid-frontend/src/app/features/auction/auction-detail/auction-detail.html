@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-gray-100 p-8">
+
+  @if (auction) {
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <div class="uppercase tracking-wide text-sm text-blue-600 font-bold mb-1">
+          Auction ID: {{ auction.id | slice:0:8 }}...
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+          {{ auction.carBrand }} {{ auction.carModel }}
+        </h1>
+        <p class="text-gray-500 text-sm mb-6">
+          Ends on: <span class="font-bold">{{ auction.endTime | date:'medium' }}</span>
+        </p>
+
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 mb-6">
+          <p class="text-gray-500 mb-1">Current Highest Bid</p>
+          <p class="text-5xl font-black text-green-600">
+            {{ auction.currentHighestBid | currency }}
+          </p>
+        </div>
+
+        <form [formGroup]="bidForm" (ngSubmit)="submitBid()" class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Your Bid Amount ($)</label>
+          <div class="flex gap-2">
+            <input
+              type="number"
+              formControlName="amount"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+            <button
+              type="submit"
+              [disabled]="bidForm.invalid"
+              class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition shadow-md disabled:opacity-50 whitespace-nowrap"
+            >
+              Place Bid
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Bid History</h2>
+
+        @if (auction.bids.length === 0) {
+          <p class="text-gray-500 italic text-center py-8">No bids yet. Be the first!</p>
+        }
+
+        <ul class="space-y-4">
+          @for (bid of auction.bids; track bid.timeStamp) {
+            <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
+              <div>
+                <p class="font-bold text-gray-800">{{ bid.bidOwner }}</p>
+                <p class="text-xs text-gray-400">{{ bid.timeStamp | date:'short' }}</p>
+              </div>
+              <span class="font-bold text-lg text-green-600">{{ bid.amount | currency }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  } @else {
+    <div class="flex justify-center mt-20">
+      <p class="text-xl text-gray-500 font-semibold animate-pulse">Loading Auction...</p>
+    </div>
+  }
+
+</div>
