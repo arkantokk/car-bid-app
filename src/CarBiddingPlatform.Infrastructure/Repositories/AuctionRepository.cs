@@ -1,4 +1,5 @@
-﻿using CarBiddingPlatform.Application.Interfaces;
+﻿using CarBiddingPlatform.Application.DTOs;
+using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Domain.Entities;
 using CarBiddingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -29,5 +30,26 @@ public class AuctionRepository : IAuctionRepository
     public async Task<bool> SaveAuctionAsync(Auction auction){
         await _context.SaveChangesAsync();
         return true;
+    }
+    
+    public async Task<AuctionDetailsDto?> GetAuctionDetailsByIdAsync(Guid id)
+    {
+        var query = from auction in _context.Auctions.AsNoTracking().Include(a => a.Bids)
+            join car in _context.Cars.AsNoTracking() on auction.CarId equals car.Id
+            where auction.Id == id
+            select new AuctionDetailsDto(
+                auction.Id,
+                car.Brand,
+                car.Model,
+                auction.StartingPrice,
+                auction.CurrentHighestBid,
+                auction.EndTime,
+                auction.SellerId,
+                auction.Bids.OrderByDescending(b => b.TimeStamp)
+                    .Select(b => new BidDto(b.BidOwner, b.Amount, b.TimeStamp))
+                    .ToList()
+            );
+
+        return await query.FirstOrDefaultAsync();
     }
 }

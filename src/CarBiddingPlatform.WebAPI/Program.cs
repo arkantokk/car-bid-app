@@ -20,10 +20,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<ApplicationDbContext>(options => 
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         // Add services to the container.
-        
+
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -35,8 +35,9 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
+        builder.Services.AddSignalR();
         builder.Services.AddExceptionHandler<GlobalErrorHandler>();
-        builder.Services.AddProblemDetails(); 
+        builder.Services.AddProblemDetails();
         var jwtSecret = builder.Configuration["JwtSettings:Secret"];
         builder.Services.AddAuthentication(options =>
             {
@@ -56,7 +57,7 @@ public class Program
                     ValidateLifetime = true
                 };
             });
-        
+
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Car Bidding API", Version = "v1" });
@@ -88,9 +89,18 @@ public class Program
                 }
             });
         });
-        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAngularClient", policy =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
         var app = builder.Build();
-        
+
         app.UseExceptionHandler();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -101,12 +111,10 @@ public class Program
 
         app.UseAuthentication();
         app.UseHttpsRedirection();
-
-        app.UseAuthorization(); 
-
-
+        app.UseCors("AllowAngularClient");
+        app.UseAuthorization();
         app.MapControllers();
-        
+        app.MapHub<Hubs.AuctionHub>("/auctionHub");
         app.Run();
     }
 }
