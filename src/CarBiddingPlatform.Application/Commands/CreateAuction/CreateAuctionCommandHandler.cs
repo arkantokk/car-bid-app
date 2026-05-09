@@ -15,7 +15,7 @@ public class CreateAuctionCommandHandler : IRequestHandler<CreateAuctionCommand,
 
     public async Task<Guid> Handle(CreateAuctionCommand command, CancellationToken cancellationToken)
     {
-        var auction = new Auction(command.CarId, command.StartingPrice, command.EndTime);
+        var auction = new Auction(command.CarId, command.StartingPrice, command.EndTime, command.SellerId);
         await _repository.CreateAuctionAsync(auction);
         return auction.Id;
     }
