@@ -1,3 +1,7 @@
-﻿namespace CarBiddingPlatform.Application.Commands.Auth.Register;
+﻿using CarBiddingPlatform.Application.DTOs;
+using MediatR;
 
-public record RegisterCommand();
+namespace CarBiddingPlatform.Application.Commands.Auth.Register;
+
+public record RegisterCommand(
+    string Email, string Password) : IRequest<AuthResponse>;
