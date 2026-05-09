@@ -1,9 +1,14 @@
-﻿using CarBiddingPlatform.Application.Commands.CreateCar;
+﻿using System.Security.Claims;
+using CarBiddingPlatform.Application.Commands.CreateCar;
+using CarBiddingPlatform.WebAPI.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;
+
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class CarsController : ControllerBase
 {
@@ -15,9 +20,18 @@ public class CarsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCarsAsync([FromBody] CreateCarCommand command)
+    public async Task<IActionResult> CreateCarsAsync([FromBody] CreateCarRequest request)
     {
-            var carId = await _mediator.Send(command);
-            return Created(string.Empty, new { CarId = carId });
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+        var command = new CreateCarCommand(
+            request.Brand, 
+            request.Model, 
+            request.Year, 
+            request.Price, 
+            userId
+        );
+        var carId = await _mediator.Send(command);
+        return Created(string.Empty, new { CarId = carId });
     }
 }

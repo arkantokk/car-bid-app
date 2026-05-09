@@ -1,10 +1,14 @@
-﻿using CarBiddingPlatform.Application;
+﻿using System.Security.Claims;
 using CarBiddingPlatform.Application.Commands.PlaceBid;
+using CarBiddingPlatform.WebAPI.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarBiddingPlatform.WebAPI.Controllers;
+
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class BidsController : ControllerBase
 {
@@ -16,9 +20,14 @@ public class BidsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PlaceBid([FromBody] PlaceBidCommand command)
+    public async Task<IActionResult> PlaceBid([FromBody] PlaceBidRequest request)
     {
-            var bid = await _mediator.Send(command);
-            return Ok(bid);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Forbid();
+        var command = new PlaceBidCommand(
+            userId, request.Amount, request.AuctionId
+        );
+        var bid = await _mediator.Send(command);
+        return Ok(bid);
     }
 }
