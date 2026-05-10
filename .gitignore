@@ -45,3 +45,21 @@ Thumbs.db
 # Logs
 # ==========================================
 *.log
+
+node_modules/
+
+# Angular build output and cache
+dist/
+tmp/
+out-tsc/
+bazel-out/
+.angular/
+
+# Testing coverage reports
+coverage/
+
+# NPM / Yarn / PNPM debug logs
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+pnpm-debug.log
