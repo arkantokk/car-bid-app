@@ -2,41 +2,63 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 
+export interface Bid {
+  auctionId: string;
+  bidOwner: string;
+  amount: number;
+  timeStamp: string;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SignalrService {
   private hubConnection: signalR.HubConnection | null = null;
-  public newBidReceived$ = new Subject<any>();
+  public newBid$ = new Subject<Bid>();
 
-  public startConnection() {
+  private readonly hubUrl = "http://localhost:5044/auctionHub";
+
+  async startConnection(): Promise<void> {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5044/auctionHub')
+      .withUrl(this.hubUrl)
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection
-      .start()
-      .then(() => console.log('✅ SignalR Connection Started'))
-      .catch(err => console.error('❌ Error while starting SignalR connection: ' + err));
-
-    this.hubConnection.on('ReceiveNewBid', (bidData) => {
-      console.log('New bid received via SignalR!', bidData);
-      this.newBidReceived$.next(bidData);
-    });
-  }
-
-  public joinAuctionGroup(auctionId: string) {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.invoke('JoinAuctionGroup', auctionId)
-        .catch(err => console.error(err));
+    try {
+      await this.hubConnection.start();
+      return console.log('SignalR Connected!');
+    } catch (err) {
+      return console.error('SignalR Connection Error: ', err);
     }
   }
 
-  public leaveAuctionGroup(auctionId: string) {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.invoke('LeaveAuctionGroup', auctionId)
-        .catch(err => console.error(err));
+  stopConnection() {
+    if (this.hubConnection) {
+      this.hubConnection.stop().then(() => console.log('SignalR Disconnected.'));
+    }
+  }
+
+  listenToBids() {
+    if (this.hubConnection) {
+      this.hubConnection.on("ReceiveNewBid", (data: Bid) => {
+        this.newBid$.next(data);
+      });
+    }
+  }
+
+  joinAuctionGroup(auctionId: string) {
+    if (this.hubConnection) {
+      this.hubConnection.invoke("JoinAuctionGroup", auctionId)
+        .then(() => console.log(`Joined auction group ${auctionId}`))
+        .catch(err => console.error('Error joining group:', err));
+    }
+  }
+
+  leaveAuctionGroup(auctionId: string) {
+    if (this.hubConnection) {
+      this.hubConnection.invoke("LeaveAuctionGroup", auctionId)
+        .then(() => console.log(`Left auction group ${auctionId}`))
+        .catch(err => console.error('Error leaving group:', err));
     }
   }
 }
