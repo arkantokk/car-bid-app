@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { AuctionDetails, AuctionService } from '../../../core/services/auctionService';
 import { SignalrService, Bid } from '../../../core/services/signalr';
+import {ToastService} from '../../../core/services/toast';
 
 @Component({
   selector: 'app-auction-detail',
@@ -20,7 +21,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private signalrService = inject(SignalrService);
   private destroyRef = inject(DestroyRef);
-
+  private toast = inject(ToastService);
   private currentAuctionId: string | null = null;
 
   auction = signal<AuctionDetails | null>(null);
@@ -108,6 +109,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
       this.auctionService.placeBid(this.currentAuctionId, amount).subscribe({
         next: () => {
           this.bidForm.reset();
+          this.toast.showToast("Bid successfully placed", "success");
         }
       });
     }
