@@ -28,4 +28,8 @@ export class AuctionService {
       amount: amount
     })
   }
+
+  getAllAuctions(){
+    return this.http.get<AuctionDetails[]>(`${this.apiUrl}/Auctions`, {})
+  }
 }
