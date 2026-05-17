@@ -1,87 +1,117 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DatePipe, CurrencyPipe, SlicePipe } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit, signal, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuctionService } from '../../../core/services/auction';
-import { SignalrService } from '../../../core/services/signalr';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+
+import { AuctionDetails, AuctionService } from '../../../core/services/auctionService';
+import { SignalrService, Bid } from '../../../core/services/signalr';
+import {ToastService} from '../../../core/services/toast';
 
 @Component({
   selector: 'app-auction-detail',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe, SlicePipe, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './auction-detail.html',
-  styleUrls: ['./auction-detail.css']
+  styleUrl: './auction-detail.css',
 })
 export class AuctionDetailComponent implements OnInit, OnDestroy {
+
   private route = inject(ActivatedRoute);
   private auctionService = inject(AuctionService);
-  private signalRService = inject(SignalrService);
-  private cdr = inject(ChangeDetectorRef);
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
+  private signalrService = inject(SignalrService);
+  private destroyRef = inject(DestroyRef);
+  private toast = inject(ToastService);
+  private currentAuctionId: string | null = null;
 
-  auctionId: string | null = null;
-  auction: any = null;
+  auction = signal<AuctionDetails | null>(null);
 
-  bidForm = this.fb.group({
-    amount: [0, [Validators.required, Validators.min(1)]]
+  bidForm = this.formBuilder.group({
+    amount: [[Validators.required]],
   });
 
   ngOnInit(): void {
-    this.auctionId = this.route.snapshot.paramMap.get('id');
+    // 1. Subscribe to URL changes
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      const idFromUrl = params.get('id');
 
-    if (this.auctionId) {
-      this.loadAuction();
-      this.signalRService.startConnection();
-      setTimeout(() => {
-        this.signalRService.joinAuctionGroup(this.auctionId!);
-      }, 1000);
-      this.signalRService.newBidReceived$.subscribe((newBid) => {
-        if (this.auction) {
-          this.auction.bids.unshift(newBid);
-          this.auction.currentHighestBid = newBid.amount;
-          this.cdr.detectChanges();
+      if (idFromUrl) {
+        // Leave previous auction group if navigating from one auction to another
+        if (this.currentAuctionId) {
+          this.signalrService.leaveAuctionGroup(this.currentAuctionId);
+        }
+
+        this.currentAuctionId = idFromUrl;
+
+        // Connect to new auction
+        this.signalrService.startConnection()
+          .then(() => {
+            this.signalrService.joinAuctionGroup(idFromUrl);
+            this.signalrService.listenToBids();
+          });
+
+        // Get auction details
+        this.auctionService.getAuctionDetails(idFromUrl).subscribe({
+          next: (data) => {
+            this.auction.set(data);
+
+            this.bidForm.controls.amount.setValidators([
+              Validators.required,
+              Validators.min(data.currentHighestBid + 1)
+            ]);
+            this.bidForm.controls.amount.updateValueAndValidity();
+
+            console.log('Auction is loaded:', this.auction());
+          },
+          error: (err) => {
+            console.error('Error fetching auction:', err);
+          }
+        });
+      }
+    });
+
+    // 2. Listen to real-time bid updates
+    this.signalrService.newBid$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (bid: Bid) => {
+          console.log('New bid from SignalR:', bid.amount);
+          this.handleNewBid(bid.amount);
         }
       });
-    }
   }
 
   ngOnDestroy(): void {
-    if (this.auctionId) {
-      this.signalRService.leaveAuctionGroup(this.auctionId);
+    if (this.currentAuctionId) {
+      this.signalrService.leaveAuctionGroup(this.currentAuctionId);
     }
+    this.signalrService.stopConnection();
   }
 
-  loadAuction() {
-    this.auctionService.getAuctionDetails(this.auctionId!).subscribe({
-      next: (data) => {
-        this.auction = data;
-        this.bidForm.patchValue({ amount: this.auction.currentHighestBid + 100 });
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Failed to load auction', err)
-    });
-  }
-
-  submitBid() {
-    if (this.bidForm.invalid) return;
-
-    const amount = this.bidForm.value.amount!;
-
-    this.auctionService.placeBid(this.auctionId!, amount).subscribe({
-      next: () => {
-        console.log('Bid placed successfully!');
-        this.bidForm.markAsPristine();
-      },
-      error: (err) => {
-        if (err.status === 409) {
-          alert('Someone else just placed a bid! Refreshing the auction data...');
-          this.loadAuction(); // Refresh the page data so they have the latest Version
-        } else {
-          console.error('Failed to place bid', err);
-          const errorMsg = err.error?.detail || 'Bid failed. Make sure your bid is higher than the current one.';
-          alert(errorMsg);
-        }
+  handleNewBid(newHighestBid: number) {
+    this.auction.update(currentData => {
+      if (!currentData) {
+        return null;
       }
+      return {
+        ...currentData,
+        currentHighestBid: newHighestBid
+      };
     });
+  }
+
+  submitBid(): void {
+    if (this.bidForm.invalid) {
+      return;
+    }
+    const amount = this.bidForm.value.amount;
+    if (this.currentAuctionId && amount) {
+      this.auctionService.placeBid(this.currentAuctionId, amount).subscribe({
+        next: () => {
+          this.bidForm.reset();
+          this.toast.showToast("Bid successfully placed", "success");
+        }
+      });
+    }
   }
 }

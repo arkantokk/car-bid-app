@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
 
 @Component({
@@ -8,30 +8,35 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrl: './login.css',
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  loginForm = this.fb.group({
+  private formBuilder = inject(FormBuilder);
+
+  loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', Validators.required],
   });
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email!, password!).subscribe({
-        next: (response) => {
-          console.log('Login successful!', response);
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          console.error('Login failed. Check your credentials.', err);
-          alert('Login failed!');
-        }
-      });
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    const credentials = {
+      email: this.loginForm.value.email ?? '',
+      password: this.loginForm.value.password ?? ''
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/home');
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+      }
+    });
   }
 }

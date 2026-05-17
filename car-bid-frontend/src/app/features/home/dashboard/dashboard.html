@@ -1,0 +1,9 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+  @for (auction of activeAuctions(); track auction.id) {
+    <div [routerLink]="['/auction', auction.id]" class="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-lg">
+
+      {{ auction.carBrand }}
+
+    </div>
+  } @empty { <div>There is no active auctions</div> }
+</div>

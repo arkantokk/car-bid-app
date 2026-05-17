@@ -1,10 +1,14 @@
-import {Injectable, inject} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
 
 export interface AuthResponse {
   token: string;
-  errors: string[];
 }
 
 @Injectable({
@@ -12,36 +16,33 @@ export interface AuthResponse {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5044/api/Auth';
+  private readonly apiUrl = 'http://localhost:5044/api/Auth';
 
-  constructor() {
+  login(credentials:LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        tap((response) => {
+         localStorage.setItem('token', response.token);
+        })
+      );
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, {email, password}).pipe(
-      tap(response => this.saveToken(response.token))
-    );
+  register(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, credentials)
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('token', response.token);
+        })
+      );
   }
 
-  register(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, {email, password}).pipe(
-      tap(response => this.saveToken(response.token))
-    );
-  }
-
-  private saveToken(token: string): void {
-    localStorage.setItem('jwt_token', token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('jwt_token');
-  }
-
-  logout(): void {
-    localStorage.removeItem('jwt_token');
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getToken();
+  logout(){
+    this.http.post(`${this.apiUrl}/logout`, {})
+    .pipe(
+      tap((response) => {
+        localStorage.removeItem('token');
+      })
+    ).subscribe()
+    // for the future when backend will be updated
   }
 }
