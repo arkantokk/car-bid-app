@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using CarBiddingPlatform.Application.Commands.CreateAuction;
+using CarBiddingPlatform.Application.Queries.GetAllAuctions;
 using CarBiddingPlatform.Application.Queries.GetAuctionById;
 using CarBiddingPlatform.WebAPI.DTOs;
 using MediatR;
@@ -28,6 +29,16 @@ public class AuctionsController : ControllerBase
         var command = new CreateAuctionCommand(request.CarId, request.StartingPrice, request.EndTime, userId);
         var auctionId = await _mediator.Send(command);
         return Created(string.Empty, new { AuctionId = auctionId });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAuctionsAsync()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Forbid();
+        var query = new GetAllAuctionsQuery();
+        var auctions = await _mediator.Send(query);
+        return Ok(auctions);
     }
     
     [HttpGet("{id}")]
