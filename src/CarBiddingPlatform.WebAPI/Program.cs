@@ -34,7 +34,11 @@ public class Program
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly));
+        builder.Services.AddMediatR(cfg => 
+        {
+            cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); 
+        });
         builder.Services.AddSignalR();
         builder.Services.AddExceptionHandler<GlobalErrorHandler>();
         builder.Services.AddProblemDetails();
