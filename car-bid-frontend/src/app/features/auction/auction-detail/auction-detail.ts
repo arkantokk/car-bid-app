@@ -78,7 +78,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         next: (bid: Bid) => {
           console.log('New bid from SignalR:', bid.amount);
           this.handleNewBid(bid.amount);
-          this.startTimer(bid.newEndTime);
+          this.startTimer(bid.endTime);
         }
       });
   }
