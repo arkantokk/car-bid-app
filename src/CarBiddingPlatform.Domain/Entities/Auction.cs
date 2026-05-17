@@ -13,15 +13,7 @@ public class Auction
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
 
-    public void PlaceBid(Bid newBid)
-    {
-        if (DateTime.UtcNow > EndTime) throw new Exception("Auction has ended.");
-        if (newBid.Amount <= CurrentHighestBid) throw new Exception("Bid must be higher than current highest bid.");
-        if (newBid.BidOwner == SellerId) throw new Exception("You cannot bid on your own auction.");
-        _bids.Add(newBid);
-        EndTime = DateTime.UtcNow.AddSeconds(5);
-        CurrentHighestBid = newBid.Amount;
-    }
+    private Auction() { }
 
     public Auction(Guid carId, decimal startingPrice, DateTime startTime, string sellerId)
     {
@@ -32,6 +24,18 @@ public class Auction
         StartingPrice = startingPrice;
         CurrentHighestBid = startingPrice;
         StartTime = startTime;
-        EndTime = startTime.AddMinutes(15);;
+        EndTime = startTime.AddMinutes(5);
+    }
+
+    public void PlaceBid(Bid newBid)
+    {
+        if (DateTime.UtcNow > EndTime) throw new Exception("Auction has ended.");
+        if (newBid.Amount <= CurrentHighestBid) throw new Exception("Bid must be higher than current highest bid.");
+        if (newBid.BidOwner == SellerId) throw new Exception("You cannot bid on your own auction.");
+        
+        _bids.Add(newBid);
+        
+        EndTime = DateTime.UtcNow.AddSeconds(15);
+        CurrentHighestBid = newBid.Amount;
     }
 }
