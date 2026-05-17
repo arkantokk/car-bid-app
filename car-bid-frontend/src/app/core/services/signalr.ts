@@ -7,6 +7,7 @@ export interface Bid {
   bidOwner: string;
   amount: number;
   timeStamp: string;
+  newEndTime: string;
 }
 
 @Injectable({

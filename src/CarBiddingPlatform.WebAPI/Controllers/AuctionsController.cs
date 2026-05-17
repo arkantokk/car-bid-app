@@ -26,7 +26,7 @@ public class AuctionsController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Forbid();
-        var command = new CreateAuctionCommand(request.CarId, request.StartingPrice, request.EndTime, userId);
+        var command = new CreateAuctionCommand(request.CarId, request.StartingPrice, request.StartTime, userId);
         var auctionId = await _mediator.Send(command);
         return Created(string.Empty, new { AuctionId = auctionId });
     }

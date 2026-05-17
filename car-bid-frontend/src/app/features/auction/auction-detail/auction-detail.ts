@@ -23,7 +23,8 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   private destroyRef = inject(DestroyRef);
   private toast = inject(ToastService);
   private currentAuctionId: string | null = null;
-
+  private timerInterval: number | undefined = undefined;
+  timeLeft = signal<number>(0);
   auction = signal<AuctionDetails | null>(null);
 
   bidForm = this.formBuilder.group({
@@ -54,7 +55,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         this.auctionService.getAuctionDetails(idFromUrl).subscribe({
           next: (data) => {
             this.auction.set(data);
-
+            this.startTimer(data.endTime);
             this.bidForm.controls.amount.setValidators([
               Validators.required,
               Validators.min(data.currentHighestBid + 1)
@@ -77,6 +78,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         next: (bid: Bid) => {
           console.log('New bid from SignalR:', bid.amount);
           this.handleNewBid(bid.amount);
+          this.startTimer(bid.newEndTime);
         }
       });
   }
@@ -113,5 +115,19 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  startTimer(endTimeStr: string): void {
+    clearInterval(this.timerInterval);
+
+    this.timerInterval = window.setInterval(() => {
+      const diffMs = new Date(endTimeStr).getTime() - new Date().getTime();
+      const secondsLeft = Math.floor(diffMs / 1000);
+
+      this.timeLeft.set(secondsLeft);
+      if (secondsLeft <= 0) {
+        clearInterval(this.timerInterval);
+      }
+    }, 1000);
   }
 }
