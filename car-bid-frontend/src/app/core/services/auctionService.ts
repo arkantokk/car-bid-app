@@ -10,6 +10,14 @@ export interface AuctionDetails {
   endTime: string;
 }
 
+export interface AuctionList{
+  id: string;
+  carBrand: string;
+  carModel: string;
+  currentHighestBid: number;
+  endTime: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -30,6 +38,6 @@ export class AuctionService {
   }
 
   getAllAuctions(){
-    return this.http.get<AuctionDetails[]>(`${this.apiUrl}/Auctions`, {})
+    return this.http.get<AuctionList[]>(`${this.apiUrl}/Auctions`, {})
   }
 }

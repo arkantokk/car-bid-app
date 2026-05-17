@@ -14,9 +14,9 @@ public class GetAllAuctionsQueryHandler : IRequestHandler<GetAllAuctionsQuery, L
     }
 
 
-    public Task<List<AuctionListDto>> Handle(GetAllAuctionsQuery request, CancellationToken cancellationToken)
+    public async Task<List<AuctionListDto>> Handle(GetAllAuctionsQuery request, CancellationToken cancellationToken)
     {
-        var auctions = _repository.GetAllAuctionsAsync();
+        var auctions = await _repository.GetAllAuctionsAsync();
         return auctions;
     }
 }
