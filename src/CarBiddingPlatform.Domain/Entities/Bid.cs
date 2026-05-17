@@ -11,7 +11,6 @@ public class Bid
     {
         if (string.IsNullOrEmpty(bidOwner)) throw new Exception("Owner shouldn't be empty");
         if (amount < 0) throw new Exception("amount cant be empty");
-        Id = Guid.NewGuid();
         BidOwner = bidOwner;
         Amount = amount;
         TimeStamp = DateTime.UtcNow;
