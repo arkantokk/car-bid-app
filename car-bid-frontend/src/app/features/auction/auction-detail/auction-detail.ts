@@ -27,7 +27,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   auction = signal<AuctionDetails | null>(null);
 
   bidForm = this.formBuilder.group({
-    amount: [0, [Validators.required]],
+    amount: [[Validators.required]],
   });
 
   ngOnInit(): void {
