@@ -47,9 +47,7 @@ public class AuctionsController : ControllerBase
     {
         var query = new GetAuctionByIdQuery(id);
         var auction = await _mediator.Send(query);
-        
         if (auction == null) return NotFound();
-        
         return Ok(auction);
     }
 }

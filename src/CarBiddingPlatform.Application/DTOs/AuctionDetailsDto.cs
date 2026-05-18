@@ -12,6 +12,7 @@ public record AuctionDetailsDto(
     string CarModel,
     decimal StartingPrice,
     decimal CurrentHighestBid,
+    DateTime StartTime,
     DateTime EndTime,
     string SellerId,
     List<BidDto> Bids

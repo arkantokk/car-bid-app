@@ -32,7 +32,7 @@ public class Auction
         if (DateTime.UtcNow > EndTime) throw new Exception("Auction has ended.");
         if (newBid.Amount <= CurrentHighestBid) throw new Exception("Bid must be higher than current highest bid.");
         if (newBid.BidOwner == SellerId) throw new Exception("You cannot bid on your own auction.");
-        
+        if (newBid.TimeStamp < StartTime) throw new Exception("Auction didn't start yet");
         _bids.Add(newBid);
         
         EndTime = DateTime.UtcNow.AddSeconds(15);
