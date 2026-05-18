@@ -9,5 +9,6 @@ public interface IAuctionRepository
     Task<List<AuctionListDto>> GetAllAuctionsAsync();
     Task<bool> CreateAuctionAsync(Auction auction);
     Task<bool> SaveAuctionAsync(Auction auction);
+    Task<List<AuctionListDto>> GetWonAuctionsAsync(string userId);
     Task<AuctionDetailsDto?> GetAuctionDetailsByIdAsync(Guid id);
 }

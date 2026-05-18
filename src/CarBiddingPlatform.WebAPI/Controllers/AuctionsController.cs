@@ -2,6 +2,7 @@
 using CarBiddingPlatform.Application.Commands.CreateAuction;
 using CarBiddingPlatform.Application.Queries.GetAllAuctions;
 using CarBiddingPlatform.Application.Queries.GetAuctionById;
+using CarBiddingPlatform.Application.Queries.GetWonAuctions;
 using CarBiddingPlatform.WebAPI.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -49,5 +50,19 @@ public class AuctionsController : ControllerBase
         var auction = await _mediator.Send(query);
         if (auction == null) return NotFound();
         return Ok(auction);
+    }
+
+    [HttpGet("won")]
+    [Authorize]
+    public async Task<IActionResult> GetWonAuctions()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Forbid();
+        }
+        var query = new GetWonAuctionsQuery(userId);
+        var auctions = await _mediator.Send(query);
+        return Ok(auctions);
     }
 }
