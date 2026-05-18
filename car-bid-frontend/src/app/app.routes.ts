@@ -9,5 +9,10 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'auction/:id', component: AuctionDetailComponent, canActivate:[authGuard]},
   {path: 'home', component: DashboardComponent, canActivate:[authGuard]},
+  {
+    path: 'create-auction',
+    loadComponent: () => import('./features/auction/create-auction/create-auction').then(m => m.CreateAuctionComponent),
+    canActivate: [authGuard]
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];

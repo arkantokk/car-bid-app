@@ -14,8 +14,13 @@
             <div>
               <div
                 class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold tracking-wide uppercase mb-6">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                @if(timeLeft() > 0) {<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 Active auction
+                } @else if (timeLeft() == -1) {
+                  <span class="w-2 h-2 rounded-full bg-gray-600 animate-pulse"></span> Loading auction
+              } @else {
+                  <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>Inactive auction
+              }
               </div>
 
               <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
@@ -44,6 +49,8 @@
                   <span class="text-sm font-medium text-slate-600">
                     Time left: <span class="text-rose-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
                   </span>
+                } @else if (timeLeft() == -1) {
+                  <span class="text-sm font-bold text-gray-700 uppercase tracking-wider">Loading auction</span>
                 } @else {
                   <span class="text-sm font-bold text-rose-600 uppercase tracking-wider">Auction Ended</span>
                 }

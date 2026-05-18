@@ -24,7 +24,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   private toast = inject(ToastService);
   private currentAuctionId: string | null = null;
   private timerInterval: number | undefined = undefined;
-  timeLeft = signal<number>(0);
+  timeLeft = signal<number>(-1);
   auction = signal<AuctionDetails | null>(null);
 
   bidForm = this.formBuilder.group({
@@ -119,9 +119,9 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
 
   startTimer(endTimeStr: string): void {
     clearInterval(this.timerInterval);
-
+    const safeEndTime = endTimeStr.endsWith('Z') ? endTimeStr : endTimeStr + 'Z';
     this.timerInterval = window.setInterval(() => {
-      const diffMs = new Date(endTimeStr).getTime() - new Date().getTime();
+      const diffMs = new Date(safeEndTime).getTime() - new Date().getTime();
       const secondsLeft = Math.floor(diffMs / 1000);
 
       this.timeLeft.set(secondsLeft);
