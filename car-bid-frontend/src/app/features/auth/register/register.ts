@@ -17,7 +17,8 @@ export class RegisterComponent {
 
   registerForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   onSubmit() {
@@ -27,7 +28,8 @@ export class RegisterComponent {
 
     const credentials = {
       email: this.registerForm.value.email ?? '',
-      password: this.registerForm.value.password ?? ''
+      password: this.registerForm.value.password ?? '',
+      userName: this.registerForm.value.username ?? '',
     };
 
     this.authService.register(credentials).subscribe({
