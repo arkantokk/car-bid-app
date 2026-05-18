@@ -19,7 +19,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponse>
     {
         var user = await _identityService.LoginAsync(request.Email, request.Password);
         if (!user.IsSuccess) return new AuthResponse("", user.Errors);
-        var token = _tokenService.GenerateToken(new TokenUserInfo(user.Email!, user.UserId!));
+        var token = _tokenService.GenerateToken(new TokenUserInfo(user.Email!, user.UserId!, user.UserName!));
         return new AuthResponse(token, []);
     }
 }

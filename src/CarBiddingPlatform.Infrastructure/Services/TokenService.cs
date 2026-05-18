@@ -19,15 +19,16 @@ public class TokenService : ITokenService
     
     public string GenerateToken(TokenUserInfo data)
     {
-        // 1. Get the settings
+        // Get the settings
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
 
-        // Create the claims (The "Luggage")
+        // Create the claims 
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, data.UserId),
             new Claim(JwtRegisteredClaimNames.Email, data.Email),
+            new Claim(JwtRegisteredClaimNames.Name, data.UserName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Unique ID for this specific token
         };
 
@@ -39,7 +40,7 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(2), // Standard expiration time
+            Expires = DateTime.UtcNow.AddHours(2), //expiration time
             Issuer = jwtSettings["Issuer"],
             Audience = jwtSettings["Audience"],
             SigningCredentials = credentials
