@@ -3,5 +3,5 @@
 public record CreateAuctionRequest(
     Guid CarId,
     decimal StartingPrice,
-    DateTime EndTime
+    DateTime StartTime
     );

@@ -30,7 +30,7 @@ public class PlaceBidCommandHandler : IRequestHandler<PlaceBidCommand, bool>
         if (result)
         {
             await _publisher.Publish(new BidPlacedNotification(
-                auction.Id, bid.BidOwner, bid.Amount, bid.TimeStamp
+                auction.Id, bid.BidOwner, bid.Amount, bid.TimeStamp, auction.EndTime
             ), cancellationToken);
         }
 

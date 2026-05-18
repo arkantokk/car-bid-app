@@ -70,6 +70,7 @@ public class AuctionRepository : IAuctionRepository
                 auction.StartingPrice,
                 auction.CurrentHighestBid,
                 auction.EndTime,
+                auction.StartTime,
                 auction.SellerId,
                 auction.Bids.OrderByDescending(b => b.TimeStamp)
                     .Select(b => new BidDto(b.BidOwner, b.Amount, b.TimeStamp))

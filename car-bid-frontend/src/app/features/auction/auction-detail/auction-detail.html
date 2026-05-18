@@ -1,17 +1,41 @@
-<div class="min-h-screen bg-[#FAFAFA] text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
+<div
+  class="min-h-screen bg-[#FAFAFA] text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-4xl mx-auto">
 
     @if (auction(); as data) {
-      <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
+      <div
+        class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
 
         <div class="grid grid-cols-1 lg:grid-cols-5">
           <div class="p-8 lg:p-12 lg:col-span-3 flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-linear-to-br from-indigo-50 to-violet-50 blur-3xl opacity-50 pointer-events-none"></div>
+            <div
+              class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-linear-to-br from-indigo-50 to-violet-50 blur-3xl opacity-50 pointer-events-none"></div>
 
             <div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold tracking-wide uppercase mb-6">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Active auction
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wide uppercase mb-6"
+                [class.bg-amber-50]="auctionStatus() === 'pending'"
+                [class.border-amber-100]="auctionStatus() === 'pending'"
+                [class.text-amber-700]="auctionStatus() === 'pending'"
+
+                [class.bg-emerald-50]="auctionStatus() === 'active'"
+                [class.border-emerald-100]="auctionStatus() === 'active'"
+                [class.text-emerald-700]="auctionStatus() === 'active'"
+
+                [class.bg-rose-50]="auctionStatus() === 'ended'"
+                [class.border-rose-100]="auctionStatus() === 'ended'"
+                [class.text-rose-700]="auctionStatus() === 'ended'"
+              >
+                @if (auctionStatus() === 'pending') {
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                  Waiting to start
+                } @else if (auctionStatus() === 'active') {
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Active auction
+                } @else {
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  Auction Ended
+                }
               </div>
 
               <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
@@ -31,8 +55,26 @@
 
             <div class="mt-12 flex items-center gap-6 pt-6 border-t border-slate-100">
               <div class="flex items-center gap-2 text-slate-500">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-sm font-medium text-slate-600">Ending soon</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+
+                @if (auctionStatus() === 'pending') {
+                  @if (timeLeft() == -1 ){<span class="text-sm font-medium text-slate-600">
+                    Loading... <span class="text-amber-600 font-bold text-lg ml-1"></span>
+                  </span> } @else {
+                    <span class="text-sm font-medium text-slate-600">
+                    Starts in: <span class="text-amber-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
+                  </span>
+                  }
+                } @else if (auctionStatus() === 'active') {
+                  <span class="text-sm font-medium text-slate-600">
+                    Time left: <span class="text-rose-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
+                  </span>
+                } @else {
+                  <span class="text-sm font-bold text-rose-600 uppercase tracking-wider">Bidding Closed</span>
+                }
               </div>
             </div>
           </div>
@@ -44,7 +86,8 @@
 
               <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span class="text-slate-400 font-semibold text-lg transition-colors group-focus-within:text-indigo-600">$</span>
+                  <span
+                    class="text-slate-400 font-semibold text-lg transition-colors group-focus-within:text-indigo-600">$</span>
                 </div>
                 <input
                   type="number"
@@ -57,7 +100,10 @@
               <div class="min-h-6">
                 @if (bidForm.controls.amount.errors?.['min'] && bidForm.controls.amount.dirty) {
                   <p class="text-sm font-medium text-rose-500 flex items-center gap-1.5 animate-in slide-in-from-top-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
                     Minimal ${{ data.currentHighestBid + 1 }}
                   </p>
                 }
@@ -65,10 +111,18 @@
 
               <button
                 type="submit"
-                [disabled]="bidForm.invalid"
+                [disabled]="bidForm.invalid || auctionStatus() !== 'active'"
                 class="relative w-full overflow-hidden rounded-2xl bg-indigo-600 text-white font-bold py-4 text-lg shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] transition-all hover:bg-indigo-700 hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
               >
-                <span>Place a bid</span>
+                <span>
+                  @if (auctionStatus() === 'pending') {
+                    Waiting to start
+                  } @else if (auctionStatus() === 'active') {
+                    Place a bid
+                  } @else {
+                    Bidding Closed
+                  }
+                </span>
               </button>
 
               <p class="text-center text-xs text-slate-400 mt-2 font-medium">
@@ -80,7 +134,7 @@
 
       </div>
     } @else {
-      <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-[500px] flex animate-pulse">
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-125 flex animate-pulse">
         <div class="w-3/5 p-12 flex flex-col gap-6">
           <div class="w-32 h-6 bg-slate-100 rounded-full"></div>
           <div class="w-64 h-12 bg-slate-100 rounded-xl"></div>

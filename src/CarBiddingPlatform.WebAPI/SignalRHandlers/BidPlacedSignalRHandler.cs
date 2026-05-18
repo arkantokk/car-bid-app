@@ -23,7 +23,8 @@ public class BidPlacedSignalRHandler : INotificationHandler<BidPlacedNotificatio
                 notification.AuctionId,
                 notification.BidOwner,
                 notification.Amount,
-                notification.TimeStamp
+                notification.TimeStamp,
+                endTime = notification.EndTime
             }, cancellationToken);
     }
 }

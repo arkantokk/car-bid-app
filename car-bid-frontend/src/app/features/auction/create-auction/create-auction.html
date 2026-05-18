@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-[#FAFAFA] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center font-sans">
+  <div class="max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 lg:p-10">
+
+    <div class="mb-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">List a New Vehicle</h2>
+      <p class="text-slate-500 font-medium">Fill in the core details to launch your live auction.</p>
+    </div>
+
+    <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Car Brand</label>
+        <input type="text" formControlName="brand" placeholder="e.g. Audi, BMW"
+               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Car Model</label>
+        <input type="text" formControlName="model" placeholder="e.g. RS6, M5"
+               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Starting Price ($)</label>
+        <input type="number" formControlName="startingPrice" placeholder="0.00"
+               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-semibold focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Auction Start Time</label>
+        <input type="datetime-local" formControlName="startTime"
+               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
+      </div>
+
+      <button type="submit" [disabled]="auctionForm.invalid"
+              class="mt-4 w-full rounded-2xl bg-indigo-600 text-white font-bold py-4 text-lg shadow-md hover:bg-indigo-700 transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed">
+        Publish Auction
+      </button>
+
+    </form>
+  </div>
+</div>

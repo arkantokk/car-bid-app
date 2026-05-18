@@ -6,5 +6,6 @@ public record BidPlacedNotification(
     Guid AuctionId, 
     string BidOwner,
     decimal Amount, 
-    DateTime TimeStamp
+    DateTime TimeStamp,
+    DateTime EndTime
 ) : INotification;
