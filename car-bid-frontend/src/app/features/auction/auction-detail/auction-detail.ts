@@ -1,10 +1,10 @@
-import { Component, inject, OnDestroy, OnInit, signal, DestroyRef } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import {Component, inject, OnDestroy, OnInit, signal, DestroyRef} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ActivatedRoute} from '@angular/router';
 
-import { AuctionDetails, AuctionService } from '../../../core/services/auctionService';
-import { SignalrService, Bid } from '../../../core/services/signalr';
+import {AuctionDetails, AuctionService} from '../../../core/services/auctionService';
+import {SignalrService, Bid} from '../../../core/services/signalr';
 import {ToastService} from '../../../core/services/toast';
 
 @Component({
@@ -26,6 +26,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   private timerInterval: number | undefined = undefined;
   timeLeft = signal<number>(-1);
   auction = signal<AuctionDetails | null>(null);
+  auctionStatus = signal<'pending' | 'active' | 'ended'>('pending')
 
   bidForm = this.formBuilder.group({
     amount: [[Validators.required]],
@@ -55,7 +56,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         this.auctionService.getAuctionDetails(idFromUrl).subscribe({
           next: (data) => {
             this.auction.set(data);
-            this.startTimer(data.endTime);
+            this.startTimer(data.startTime, data.endTime);
             this.bidForm.controls.amount.setValidators([
               Validators.required,
               Validators.min(data.currentHighestBid + 1)
@@ -77,8 +78,9 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (bid: Bid) => {
           console.log('New bid from SignalR:', bid.amount);
+          const currentStartTime = this.auction()?.startTime || '';
+          this.startTimer(currentStartTime, bid.endTime);
           this.handleNewBid(bid.amount);
-          this.startTimer(bid.endTime);
         }
       });
   }
@@ -117,16 +119,29 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  startTimer(endTimeStr: string): void {
+  startTimer(startTimeStr: string, endTimeStr: string): void {
     clearInterval(this.timerInterval);
-    const safeEndTime = endTimeStr.endsWith('Z') ? endTimeStr : endTimeStr + 'Z';
-    this.timerInterval = window.setInterval(() => {
-      const diffMs = new Date(safeEndTime).getTime() - new Date().getTime();
-      const secondsLeft = Math.floor(diffMs / 1000);
 
-      this.timeLeft.set(secondsLeft);
-      if (secondsLeft <= 0) {
-        clearInterval(this.timerInterval);
+    const safeStartTime = startTimeStr.endsWith('Z') ? startTimeStr : startTimeStr + 'Z';
+    const safeEndTime = endTimeStr.endsWith('Z') ? endTimeStr : endTimeStr + 'Z';
+    const startMs = new Date(safeStartTime).getTime();
+    const endMs = new Date(safeEndTime).getTime();
+
+    this.timerInterval = window.setInterval(() => {
+      const now = new Date().getTime();
+
+      if (now < startMs) {
+        this.auctionStatus.set('pending')
+        const diffMs = startMs - now;
+        this.timeLeft.set(Math.floor(diffMs / 1000));
+      } else if (now >= startMs && now < endMs) {
+        this.auctionStatus.set('active');
+        const diffMs = endMs - now;
+        this.timeLeft.set(Math.floor(diffMs / 1000));
+      } else {
+        this.auctionStatus.set('ended');
+        this.timeLeft.set(0);
+        clearInterval(this.timerInterval)
       }
     }, 1000);
   }

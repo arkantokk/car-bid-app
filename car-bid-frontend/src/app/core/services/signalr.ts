@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 
-export interface Bid {
+export interface  Bid {
   auctionId: string;
   bidOwner: string;
   amount: number;

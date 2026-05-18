@@ -13,14 +13,29 @@
 
             <div>
               <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold tracking-wide uppercase mb-6">
-                @if(timeLeft() > 0) {<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Active auction
-                } @else if (timeLeft() == -1) {
-                  <span class="w-2 h-2 rounded-full bg-gray-600 animate-pulse"></span> Loading auction
-              } @else {
-                  <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>Inactive auction
-              }
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wide uppercase mb-6"
+                [class.bg-amber-50]="auctionStatus() === 'pending'"
+                [class.border-amber-100]="auctionStatus() === 'pending'"
+                [class.text-amber-700]="auctionStatus() === 'pending'"
+
+                [class.bg-emerald-50]="auctionStatus() === 'active'"
+                [class.border-emerald-100]="auctionStatus() === 'active'"
+                [class.text-emerald-700]="auctionStatus() === 'active'"
+
+                [class.bg-rose-50]="auctionStatus() === 'ended'"
+                [class.border-rose-100]="auctionStatus() === 'ended'"
+                [class.text-rose-700]="auctionStatus() === 'ended'"
+              >
+                @if (auctionStatus() === 'pending') {
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                  Waiting to start
+                } @else if (auctionStatus() === 'active') {
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Active auction
+                } @else {
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  Auction Ended
+                }
               </div>
 
               <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
@@ -45,14 +60,20 @@
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
 
-                @if (timeLeft() > 0) {
+                @if (auctionStatus() === 'pending') {
+                  @if (timeLeft() == -1 ){<span class="text-sm font-medium text-slate-600">
+                    Loading... <span class="text-amber-600 font-bold text-lg ml-1"></span>
+                  </span> } @else {
+                    <span class="text-sm font-medium text-slate-600">
+                    Starts in: <span class="text-amber-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
+                  </span>
+                  }
+                } @else if (auctionStatus() === 'active') {
                   <span class="text-sm font-medium text-slate-600">
                     Time left: <span class="text-rose-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
                   </span>
-                } @else if (timeLeft() == -1) {
-                  <span class="text-sm font-bold text-gray-700 uppercase tracking-wider">Loading auction</span>
                 } @else {
-                  <span class="text-sm font-bold text-rose-600 uppercase tracking-wider">Auction Ended</span>
+                  <span class="text-sm font-bold text-rose-600 uppercase tracking-wider">Bidding Closed</span>
                 }
               </div>
             </div>
@@ -90,11 +111,13 @@
 
               <button
                 type="submit"
-                [disabled]="bidForm.invalid || timeLeft() <= 0"
+                [disabled]="bidForm.invalid || auctionStatus() !== 'active'"
                 class="relative w-full overflow-hidden rounded-2xl bg-indigo-600 text-white font-bold py-4 text-lg shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] transition-all hover:bg-indigo-700 hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
               >
                 <span>
-                  @if (timeLeft() > 0) {
+                  @if (auctionStatus() === 'pending') {
+                    Waiting to start
+                  } @else if (auctionStatus() === 'active') {
                     Place a bid
                   } @else {
                     Bidding Closed
@@ -111,7 +134,7 @@
 
       </div>
     } @else {
-      <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-[500px] flex animate-pulse">
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-125 flex animate-pulse">
         <div class="w-3/5 p-12 flex flex-col gap-6">
           <div class="w-32 h-6 bg-slate-100 rounded-full"></div>
           <div class="w-64 h-12 bg-slate-100 rounded-xl"></div>

@@ -8,6 +8,7 @@ export interface AuctionDetails {
   carModel: string;
   startingPrice: number;
   currentHighestBid: number;
+  startTime: string;
   endTime: string;
 }
 
