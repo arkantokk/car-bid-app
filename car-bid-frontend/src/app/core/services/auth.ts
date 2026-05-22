@@ -12,6 +12,18 @@ export interface AuthResponse {
   token: string;
 }
 
+export interface JwtUserPayload {
+  "sub": string,
+  "email": string,
+  "name": string,
+  "jti": string,
+  "nbf": number,
+  "exp": number,
+  "iat": number,
+  "iss": string,
+  "aud": string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -60,8 +72,8 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const decodedToken: any = jwtDecode(token);
-        const username = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+        const decodedToken = jwtDecode<JwtUserPayload>(token);
+        const username = decodedToken['name'];
         this.currentUser.set(username || 'User');
       } catch (error) {
         console.error('Failed to decode token', error);
