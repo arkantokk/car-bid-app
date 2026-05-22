@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
 
     this.isLoading.set(true);
     forkJoin({
-      auctions: this.auctionService.getAllAuctions(),
+      auctions: this.auctionService.getUserAuctions(),
       wonAuctions: this.auctionService.getWonAuctions()
     }).subscribe({
       next: (results) => {

@@ -29,6 +29,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   auctionStatus = signal<'pending' | 'active' | 'ended'>('pending')
   progress = signal<number>(100);
   currentMaxDuration = signal<number>(0)
+  isImageOpen = signal(false);
   bidForm = this.formBuilder.group({
     amount: [[Validators.required]],
   });
@@ -148,5 +149,15 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         clearInterval(this.timerInterval)
       }
     }, 1000);
+  }
+
+  openImage(): void {
+    this.isImageOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeImage(): void {
+    this.isImageOpen.set(false);
+    document.body.style.overflow = 'auto';
   }
 }

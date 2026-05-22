@@ -1,41 +1,104 @@
-<div class="min-h-screen bg-[#FAFAFA] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center font-sans">
-  <div class="max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 lg:p-10">
+<div class="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
 
-    <div class="mb-8">
-      <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">List a New Vehicle</h2>
-      <p class="text-slate-500 font-medium">Fill in the core details to launch your live auction.</p>
+    <div class="mb-10 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Create New Auction</h1>
+        <p class="text-slate-500 font-medium mt-1">Fill in the details to list your vehicle.</p>
+      </div>
+      <a routerLink="/profile" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
+        Cancel & Exit
+      </a>
     </div>
 
-    <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+    <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-8">
 
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Car Brand</label>
-        <input type="text" formControlName="brand" placeholder="e.g. Audi, BMW"
-               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
+      <div class="md:col-span-5">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+          <label class="block text-sm font-black text-slate-700 uppercase tracking-widest mb-4">Vehicle Photo</label>
+
+          <div class="relative group">
+            <div
+              (click)="fileInput.click()"
+              class="relative h-64 w-full rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-all duration-300"
+            >
+              @if (imagePreview()) {
+                <img [src]="imagePreview()" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span class="text-white font-bold text-sm">Change Photo</span>
+                </div>
+              } @else {
+                <div class="text-center p-6">
+                  <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4 text-slate-400 group-hover:text-indigo-500 transition-colors">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                  </div>
+                  <p class="text-sm font-bold text-slate-500">Click to upload</p>
+                  <p class="text-xs text-slate-400 mt-1 font-medium">PNG, JPG up to 10MB</p>
+                </div>
+              }
+            </div>
+            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+          </div>
+
+          <div class="mt-4 flex items-start gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
+            <span class="text-lg">💡</span>
+            <p class="text-[11px] leading-relaxed text-amber-800 font-medium">
+              High-quality photos increase the final bid price by up to 25%. Make sure the car is well-lit.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Car Model</label>
-        <input type="text" formControlName="model" placeholder="e.g. RS6, M5"
-               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
-      </div>
+      <div class="md:col-span-7 space-y-6">
+        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
 
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Starting Price ($)</label>
-        <input type="number" formControlName="startingPrice" placeholder="0.00"
-               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-semibold focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
-      </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Brand</label>
+              <input formControlName="brand" type="text" placeholder="e.g. BMW"
+                     class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 transition-all">
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Model</label>
+              <input formControlName="model" type="text" placeholder="e.g. M4"
+                     class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 transition-all">
+            </div>
+          </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">Auction Start Time</label>
-        <input type="datetime-local" formControlName="startTime"
-               class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm">
-      </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Year</label>
+              <input formControlName="year" type="number"
+                     class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 transition-all">
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Starting Price ($)</label>
+              <input formControlName="startingPrice" type="number" placeholder="0"
+                     class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 transition-all">
+            </div>
+          </div>
 
-      <button type="submit" [disabled]="auctionForm.invalid"
-              class="mt-4 w-full rounded-2xl bg-indigo-600 text-white font-bold py-4 text-lg shadow-md hover:bg-indigo-700 transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed">
-        Publish Auction
-      </button>
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Auction Start Date & Time</label>
+            <input formControlName="startTime" type="datetime-local"
+                   class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 transition-all">
+          </div>
+
+          <div class="pt-4">
+            <button
+              type="submit"
+              [disabled]="auctionForm.invalid || !selectedFile"
+              class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-slate-200 hover:bg-indigo-600 hover:shadow-indigo-200 transition-all disabled:opacity-50 disabled:hover:bg-slate-900 disabled:cursor-not-allowed transform active:scale-[0.98]"
+            >
+              List Vehicle for Auction
+            </button>
+            <p class="text-center text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-tighter">
+              By clicking "List Vehicle", you agree to our Marketplace Terms of Service.
+            </p>
+          </div>
+
+        </div>
+      </div>
 
     </form>
   </div>

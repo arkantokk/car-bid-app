@@ -6,6 +6,7 @@ export interface AuctionDetails {
   id: string;
   carBrand: string;
   carModel: string;
+  imageUrl: string;
   startingPrice: number;
   currentHighestBid: number;
   startTime: string;
@@ -16,6 +17,7 @@ export interface AuctionList {
   id: string;
   carBrand: string;
   carModel: string;
+  imageUrl: string;
   currentHighestBid: number;
   endTime: string;
 }
@@ -23,6 +25,8 @@ export interface AuctionList {
 export interface CreateAuctionFormData {
   brand: string;
   model: string;
+  year: number;
+  image: File;
   startingPrice: number;
   startTime: string;
 }
@@ -49,12 +53,14 @@ export class AuctionService {
     return this.http.get<AuctionList[]>(`${this.apiUrl}/Auctions`, {});
   }
 
-  publishAuction(formData: CreateAuctionFormData): Observable<any> {
-    return this.http.post<{ carId: string }>(`${this.apiUrl}/Cars`, {
-      brand: formData.brand,
-      model: formData.model,
-      year: 2026
-    }).pipe(
+  publishAuction(formData: CreateAuctionFormData) {
+    const carData = new FormData();
+    carData.append('Brand', formData.brand);
+    carData.append('Model', formData.model);
+    carData.append('Year', formData.year.toString());
+    carData.append('Price', formData.startingPrice.toString());
+    carData.append('Image', formData.image);
+    return this.http.post<{ carId: string }>(`${this.apiUrl}/Cars`, carData).pipe(
       switchMap(carResponse => {
         return this.http.post(`${this.apiUrl}/Auctions`, {
           carId: carResponse.carId,
