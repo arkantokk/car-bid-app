@@ -14,5 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auction/create-auction/create-auction').then(m => m.CreateAuctionComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
