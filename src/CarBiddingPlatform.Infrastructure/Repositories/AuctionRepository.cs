@@ -99,4 +99,26 @@ public class AuctionRepository : IAuctionRepository
 
         return await query.FirstOrDefaultAsync();
     }
+
+    public async Task<List<AuctionListDto>> GetAllUserAuctionsAsync(string userId)
+    {
+        var query =  _context.Auctions
+            .AsNoTracking()
+            .Where(a => a.SellerId == userId)
+            .Join(
+                _context.Cars.AsNoTracking(),
+                auction => auction.CarId,
+                car => car.Id,
+                (auction, car) => new AuctionListDto(
+                    auction.Id,
+                    car.Brand,
+                    car.Model,
+                    auction.CurrentHighestBid,
+                    auction.EndTime
+                )
+            );
+        
+        // TODO: PAGINATION
+        return await query.ToListAsync();
+    }
 }
