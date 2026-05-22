@@ -13,18 +13,18 @@
 
             <div>
               <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wide uppercase mb-6"
                 [class.bg-amber-50]="auctionStatus() === 'pending'"
+                [class.bg-emerald-50]="auctionStatus() === 'active'"
+                [class.bg-rose-50]="auctionStatus() === 'ended'"
                 [class.border-amber-100]="auctionStatus() === 'pending'"
+
+                [class.border-emerald-100]="auctionStatus() === 'active'"
+                [class.border-rose-100]="auctionStatus() === 'ended'"
                 [class.text-amber-700]="auctionStatus() === 'pending'"
 
-                [class.bg-emerald-50]="auctionStatus() === 'active'"
-                [class.border-emerald-100]="auctionStatus() === 'active'"
                 [class.text-emerald-700]="auctionStatus() === 'active'"
-
-                [class.bg-rose-50]="auctionStatus() === 'ended'"
-                [class.border-rose-100]="auctionStatus() === 'ended'"
                 [class.text-rose-700]="auctionStatus() === 'ended'"
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wide uppercase mb-6"
               >
                 @if (auctionStatus() === 'pending') {
                   <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
@@ -56,22 +56,34 @@
             <div class="mt-12 flex items-center gap-6 pt-6 border-t border-slate-100">
               <div class="flex items-center gap-2 text-slate-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="1.5"></path>
                 </svg>
 
                 @if (auctionStatus() === 'pending') {
-                  @if (timeLeft() == -1 ){<span class="text-sm font-medium text-slate-600">
+                  @if (timeLeft() == -1) {
+                    <span class="text-sm font-medium text-slate-600">
                     Loading... <span class="text-amber-600 font-bold text-lg ml-1"></span>
-                  </span> } @else {
+                  </span>
+                  } @else {
                     <span class="text-sm font-medium text-slate-600">
                     Starts in: <span class="text-amber-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
                   </span>
                   }
                 } @else if (auctionStatus() === 'active') {
-                  <span class="text-sm font-medium text-slate-600">
-                    Time left: <span class="text-rose-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
+                  <div class="flex flex-col w-full"> <span class="text-sm font-medium text-slate-600 mb-2">
+                  Time left: <span class="text-rose-600 font-bold text-lg ml-1">{{ timeLeft() }}s</span>
                   </span>
+
+                    <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        [class.bg-emerald-500]="progress() > 20"
+                        [class.bg-rose-500]="progress() <= 20"
+                        [style.width.%]="progress()"
+                        class="h-full rounded-full transition-all duration-1000 ease-linear">
+                      </div>
+                    </div>
+                  </div>
                 } @else {
                   <span class="text-sm font-bold text-rose-600 uppercase tracking-wider">Bidding Closed</span>
                 }
@@ -82,7 +94,7 @@
           <div class="bg-slate-50 border-l border-slate-100 p-8 lg:p-12 lg:col-span-2 flex flex-col justify-center">
             <h3 class="text-xl font-bold text-slate-900 mb-6">Your bid</h3>
 
-            <form [formGroup]="bidForm" (ngSubmit)="submitBid()" class="flex flex-col gap-4">
+            <form (ngSubmit)="submitBid()" [formGroup]="bidForm" class="flex flex-col gap-4">
 
               <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -90,19 +102,21 @@
                     class="text-slate-400 font-semibold text-lg transition-colors group-focus-within:text-indigo-600">$</span>
                 </div>
                 <input
-                  type="number"
+                  class="block w-full pl-9 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-slate-900 font-semibold text-lg placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 transition-all shadow-sm"
                   formControlName="amount"
                   placeholder="Enter your bid"
-                  class="block w-full pl-9 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-slate-900 font-semibold text-lg placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 transition-all shadow-sm"
+                  type="number"
                 >
               </div>
 
               <div class="min-h-6">
                 @if (bidForm.controls.amount.errors?.['min'] && bidForm.controls.amount.dirty) {
                   <p class="text-sm font-medium text-rose-500 flex items-center gap-1.5 animate-in slide-in-from-top-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"></path>
                     </svg>
                     Minimal ${{ data.currentHighestBid + 1 }}
                   </p>
@@ -110,9 +124,9 @@
               </div>
 
               <button
-                type="submit"
                 [disabled]="bidForm.invalid || auctionStatus() !== 'active'"
                 class="relative w-full overflow-hidden rounded-2xl bg-indigo-600 text-white font-bold py-4 text-lg shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] transition-all hover:bg-indigo-700 hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
+                type="submit"
               >
                 <span>
                   @if (auctionStatus() === 'pending') {

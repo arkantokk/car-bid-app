@@ -64,4 +64,12 @@ export class AuctionService {
       })
     );
   }
+
+  getWonAuctions(){
+    return this.http.get<AuctionList[]>(`${this.apiUrl}/Auctions/won`)
+  }
+
+  getUserAuctions(){
+    return this.http.get<AuctionList[]>(`${this.apiUrl}/Auctions/my-listings`)
+  }
 }

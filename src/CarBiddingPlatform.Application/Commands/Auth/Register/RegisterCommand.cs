@@ -4,4 +4,4 @@ using MediatR;
 namespace CarBiddingPlatform.Application.Commands.Auth.Register;
 
 public record RegisterCommand(
-    string Email, string Password) : IRequest<AuthResponse>;
+    string Email, string Password, string UserName) : IRequest<AuthResponse>;

@@ -18,9 +18,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
 
     public async Task<AuthResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var user = await _identityService.RegisterAsync(request.Email, request.Password);
+        var user = await _identityService.RegisterAsync(request.Email, request.Password, request.UserName);
         if (!user.IsSuccess) return new AuthResponse("", user.Errors);
-        var token = _tokenService.GenerateToken(new TokenUserInfo(user.Email!, user.UserId!));
+        var token = _tokenService.GenerateToken(new TokenUserInfo(user.Email!, user.UserId!, request.UserName));
         return new AuthResponse(token, []);
     }
 }

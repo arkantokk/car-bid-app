@@ -12,6 +12,7 @@ public class Auction
     public IReadOnlyCollection<Bid> Bids => _bids.AsReadOnly();
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
+    public string? HighestBidderId { get; private set; }
 
     private Auction() { }
 
@@ -37,5 +38,6 @@ public class Auction
         
         EndTime = DateTime.UtcNow.AddSeconds(15);
         CurrentHighestBid = newBid.Amount;
+        HighestBidderId = newBid.BidOwner;
     }
 }

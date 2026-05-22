@@ -2,6 +2,7 @@
 
 public record TokenUserInfo(
     string Email,
-    string UserId
+    string UserId,
+    string UserName
     // TODO: add roles
     );

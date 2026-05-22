@@ -58,6 +58,26 @@ public class AuctionRepository : IAuctionRepository
         return true;
     }
 
+    public async Task<List<AuctionListDto>> GetWonAuctionsAsync(string userId)
+    {
+        var query =  _context.Auctions
+            .Where(a => a.HighestBidderId == userId && a.EndTime <= DateTime.UtcNow)
+            .AsNoTracking()
+            .Join(
+                _context.Cars.AsNoTracking(),
+                auction => auction.CarId,
+                car => car.Id,
+                (auction, car) => new AuctionListDto(
+                    auction.Id,
+                    car.Brand,
+                    car.Model,
+                    auction.CurrentHighestBid,
+                    auction.EndTime
+                )
+            );
+        return await query.ToListAsync();
+    }
+
     public async Task<AuctionDetailsDto?> GetAuctionDetailsByIdAsync(Guid id)
     {
         var query = from auction in _context.Auctions.AsNoTracking().Include(a => a.Bids)
@@ -78,5 +98,27 @@ public class AuctionRepository : IAuctionRepository
             );
 
         return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<List<AuctionListDto>> GetAllUserAuctionsAsync(string userId)
+    {
+        var query =  _context.Auctions
+            .AsNoTracking()
+            .Where(a => a.SellerId == userId)
+            .Join(
+                _context.Cars.AsNoTracking(),
+                auction => auction.CarId,
+                car => car.Id,
+                (auction, car) => new AuctionListDto(
+                    auction.Id,
+                    car.Brand,
+                    car.Model,
+                    auction.CurrentHighestBid,
+                    auction.EndTime
+                )
+            );
+        
+        // TODO: PAGINATION
+        return await query.ToListAsync();
     }
 }
