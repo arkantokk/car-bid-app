@@ -10,6 +10,7 @@ public record AuctionDetailsDto(
     Guid Id,
     string CarBrand,
     string CarModel,
+    string ImageUrl,
     decimal StartingPrice,
     decimal CurrentHighestBid,
     DateTime EndTime,

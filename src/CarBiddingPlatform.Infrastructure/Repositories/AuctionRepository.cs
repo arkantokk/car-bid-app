@@ -33,6 +33,7 @@ public class AuctionRepository : IAuctionRepository
                     auction.Id,
                     car.Brand,
                     car.Model,
+                    car.ImageUrl,
                     auction.CurrentHighestBid,
                     auction.EndTime
                 )
@@ -71,6 +72,7 @@ public class AuctionRepository : IAuctionRepository
                     auction.Id,
                     car.Brand,
                     car.Model,
+                    car.ImageUrl,
                     auction.CurrentHighestBid,
                     auction.EndTime
                 )
@@ -87,6 +89,7 @@ public class AuctionRepository : IAuctionRepository
                 auction.Id,
                 car.Brand,
                 car.Model,
+                car.ImageUrl,
                 auction.StartingPrice,
                 auction.CurrentHighestBid,
                 auction.EndTime,
@@ -113,6 +116,7 @@ public class AuctionRepository : IAuctionRepository
                     auction.Id,
                     car.Brand,
                     car.Model,
+                    car.ImageUrl,
                     auction.CurrentHighestBid,
                     auction.EndTime
                 )

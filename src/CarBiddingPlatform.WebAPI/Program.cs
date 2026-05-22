@@ -1,6 +1,5 @@
 using System.Text;
 using CarBiddingPlatform.Application.Commands.CreateAuction;
-using CarBiddingPlatform.Application.Commands.PlaceBid;
 using CarBiddingPlatform.Application.Interfaces;
 using CarBiddingPlatform.Infrastructure.Data;
 using CarBiddingPlatform.Infrastructure.Repositories;
