@@ -7,5 +7,7 @@ public record CreateCarCommand(
     string Model,
     int Year,
     decimal Price,
+    Stream ImageStream,
+    string ImageFileName,
     string UserId
     ) : IRequest<Guid>;

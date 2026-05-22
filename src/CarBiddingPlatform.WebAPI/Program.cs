@@ -34,6 +34,7 @@ public class Program
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
+        builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
         builder.Services.AddMediatR(cfg => 
         {
             cfg.RegisterServicesFromAssembly(typeof(CreateAuctionCommand).Assembly);
