@@ -27,7 +27,8 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   timeLeft = signal<number>(-1);
   auction = signal<AuctionDetails | null>(null);
   auctionStatus = signal<'pending' | 'active' | 'ended'>('pending')
-
+  progress = signal<number>(100);
+  currentMaxDuration = signal<number>(0)
   bidForm = this.formBuilder.group({
     amount: [[Validators.required]],
   });
@@ -62,7 +63,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
               Validators.min(data.currentHighestBid + 1)
             ]);
             this.bidForm.controls.amount.updateValueAndValidity();
-
+            this.currentMaxDuration.set(new Date(data.endTime).getTime() - new Date(data.startTime).getTime());
             console.log('Auction is loaded:', this.auction());
           },
           error: (err) => {
@@ -79,6 +80,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
         next: (bid: Bid) => {
           console.log('New bid from SignalR:', bid.amount);
           const currentStartTime = this.auction()?.startTime || '';
+          this.currentMaxDuration.set(new Date(bid.endTime).getTime() - new Date(bid.timeStamp).getTime())
           this.startTimer(currentStartTime, bid.endTime);
           this.handleNewBid(bid.amount);
         }
@@ -129,7 +131,8 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
 
     this.timerInterval = window.setInterval(() => {
       const now = new Date().getTime();
-
+      const timePercentLeft = endMs - now;
+      const percentage = (timePercentLeft / this.currentMaxDuration()) * 100;
       if (now < startMs) {
         this.auctionStatus.set('pending')
         const diffMs = startMs - now;
@@ -137,6 +140,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
       } else if (now >= startMs && now < endMs) {
         this.auctionStatus.set('active');
         const diffMs = endMs - now;
+        this.progress.set(Math.floor(percentage))
         this.timeLeft.set(Math.floor(diffMs / 1000));
       } else {
         this.auctionStatus.set('ended');
